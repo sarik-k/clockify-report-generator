@@ -13,6 +13,13 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
             entries.push({ title, client })
         })
 
+        last_day_report.querySelectorAll("parent-tracker-entry").forEach((entry) => {
+            let title = entry.querySelector("[placeholder='Add description']").value;
+            let project = entry.querySelector("project-picker-label");
+            let client = project.querySelector(".cl-listing-client").textContent;
+            entries.push({ title, client })
+        })
+
         list(entries);
         grouped(entries);
 
