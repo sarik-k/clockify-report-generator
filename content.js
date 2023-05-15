@@ -6,14 +6,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
         let entries = [];
 
-        last_day_report.querySelectorAll("time-tracker-entry").forEach((entry) => {
-            let title = entry.querySelector("[placeholder='Add description']").value;
-            let project = entry.querySelector("project-picker-label");
-            let client = project.querySelector(".cl-listing-client").textContent;
-            entries.push({ title, client })
-        })
-
-        last_day_report.querySelectorAll("parent-tracker-entry").forEach((entry) => {
+        last_day_report.querySelectorAll("time-tracker-entry, parent-tracker-entry").forEach((entry) => {
             let title = entry.querySelector("[placeholder='Add description']").value;
             let project = entry.querySelector("project-picker-label");
             let client = project.querySelector(".cl-listing-client").textContent;
