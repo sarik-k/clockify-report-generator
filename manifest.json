@@ -5,12 +5,22 @@
   "description": "Clockify Report Generator",
   "version": "1.0",
   "action": {},
-  "permissions": ["activeTab"],
+  "permissions": [
+    "activeTab"
+  ],
   "background": {
     "service_worker": "background.js"
   },
-  "content_scripts": [{
-    "matches": ["*://app.clockify.me/tracker*"],
-    "js": ["content.js"]
-  }]
+  "content_scripts": [
+    {
+      "matches": [
+        "*://app.clockify.me/tracker*"
+      ],
+      "js": [
+        "jquery.min.js",
+        "html2canvas.js",
+        "content.js"
+      ]
+    }
+  ]
 }
