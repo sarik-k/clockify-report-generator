@@ -15,17 +15,21 @@ window.addEventListener('DOMContentLoaded', async () => {
                 writeToPopup);
         } else {
             $(".loading").hide();
-            $(".content").show();
-            $(".content").html("Not clockify tracker site")
+            $(".content-wrap").show();
+            $(".content-wrap").html("Not clockify tracker site")
         }
 
     });
 });
+$(function () {
+    $("#copy-button").on("click", copy);
+})
+
 
 function writeToPopup(info) {
     let link = uploadImage(info.img);
     $(".loading").hide();
-    $(".content").show();
+    $(".content-wrap").show();
     $(".entries").html(formatOutput(info.entries, link))
 };
 
@@ -40,18 +44,16 @@ function formatOutput(entries, link) {
 
 
     Object.keys(groups).forEach((client) => {
-        output += `<strong>${client}</strong>`;
+        output += client;
 
-        output += `<ul>`;
+        output += `<ul class="mb-0">`;
         groups[client].forEach(entry => {
             output += `<li> ${entry.title} \n </li>`
-        })
-        output += `</ul>`
+        });
+        output += `</ul>`;
+        output += '<br>';
     })
-
-    output += link;
-
-    console.log(output);
+    output += `Clockify report:  <a href="${link}" target="_blank">${link}</a>`;
 
     return output;
 }
@@ -82,4 +84,11 @@ function uploadImage(img) {
     });
 
     return link;
+}
+
+function copy() {
+    const content = $(".content").html();
+    const blob = new Blob([content], { type: 'text/html' });
+    const clipboardItem = new window.ClipboardItem({ 'text/html': blob });
+    navigator.clipboard.write([clipboardItem]);
 }
