@@ -4,7 +4,9 @@
   "name": "Clockify Report Generator",
   "description": "Clockify Report Generator",
   "version": "1.0",
-  "action": {},
+  "action": {
+    "default_popup": "index.html"
+  },
   "permissions": [
     "activeTab"
   ],
