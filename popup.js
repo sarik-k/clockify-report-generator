@@ -1,16 +1,24 @@
 // Once the DOM is ready...
 window.addEventListener('DOMContentLoaded', async () => {
-    
+
     // ...query for the active tab...
     chrome.tabs.query({
         active: true,
         currentWindow: true
     }, tabs => {
+        const tab = tabs[0];
         // ...and send a request for the DOM info...
-        chrome.tabs.sendMessage(
-            tabs[0].id,
-            { from: 'popup', subject: 'get_clockify_report' },
-            writeToPopup);
+        if (tab.url.startsWith("https://app.clockify.me/tracker")) {
+            chrome.tabs.sendMessage(
+                tab.id,
+                { from: 'popup', subject: 'get_clockify_report' },
+                writeToPopup);
+        } else {
+            $(".loading").hide();
+            $(".content").show();
+            $(".content").html("Not clockify tracker site")
+        }
+
     });
 });
 
@@ -30,7 +38,7 @@ function formatOutput(entries, link) {
         return r;
     }, Object.create(null));
 
-    
+
     Object.keys(groups).forEach((client) => {
         output += `<strong>${client}</strong>`;
 
