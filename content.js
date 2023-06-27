@@ -9,7 +9,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         last_day_report.querySelectorAll("time-tracker-entry, parent-tracker-entry").forEach((entry) => {
             let title = entry.querySelector("[placeholder='Add description']").value;
             let project = entry.querySelector("project-picker-label");
-            let client = project.querySelector(".cl-listing-client").textContent;
+            let client = project.querySelector(".cl-listing-client").textContent || project.querySelector("a.cl-project-name").textContent;
             entries.push({ title, client })
         })
 
