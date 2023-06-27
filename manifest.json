@@ -11,7 +11,7 @@
     "activeTab"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "js/background.js"
   },
   "content_scripts": [
     {
@@ -19,9 +19,9 @@
         "*://app.clockify.me/tracker*"
       ],
       "js": [
-        "jquery.min.js",
-        "html2canvas.js",
-        "content.js"
+        "js/jquery.min.js",
+        "js/html2canvas.js",
+        "js/content.js"
       ]
     }
   ]
