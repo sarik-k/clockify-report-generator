@@ -90,5 +90,5 @@ function copy() {
     const content = $(".content").html();
     const blob = new Blob([content], { type: 'text/html' });
     const clipboardItem = new window.ClipboardItem({ 'text/html': blob });
-    navigator.clipboard.write([clipboardItem]);
+    navigator.clipboard.write([clipboardItem]).then(() => window.close());
 }
