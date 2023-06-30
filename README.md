@@ -9,4 +9,9 @@ Installation:
 - Click the extension icon and the tasks will be displayed grouped by project
 - Copy and paste into slack/pumble
 
+For webhook: 
+- Create slack/pumble webhook
+- Add link to settings
+- Hit send
+
 ![Screenshot](https://i.imgur.com/uBNUB9o.png)
