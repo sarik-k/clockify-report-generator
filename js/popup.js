@@ -34,6 +34,7 @@ function writeToPopup(info) {
     $(".loading").hide();
     $(".content-wrap").show();
     $(".settings-wrap").show();
+    $(".buttons-wrap").show();
     $(".entries").html(formatOutput(info.entries, link))
     window.clockify_report = { entries: info.entries, link }
 };
@@ -184,4 +185,5 @@ function formatOutputForWebhook() {
 function toggleSettings() {
     $(".settings").toggleClass("d-none")
     $(".content-wrap").toggleClass("d-none")
+    $(".buttons-wrap").toggleClass("d-none")
 }
