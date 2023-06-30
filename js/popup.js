@@ -33,6 +33,7 @@ function writeToPopup(info) {
     let link = uploadImage(info.img);
     $(".loading").hide();
     $(".content-wrap").show();
+    $(".settings-wrap").show();
     $(".entries").html(formatOutput(info.entries, link))
     window.clockify_report = { entries: info.entries, link }
 };
