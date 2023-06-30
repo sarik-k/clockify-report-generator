@@ -19,8 +19,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
 
     restoreOptions();
-    document.getElementById('webhook_url').addEventListener('input', saveOptions);
+    document.getElementById('settings-save').addEventListener('click', saveOptions);
     document.getElementById('send-button').addEventListener('click', sendToWebhook);
+    document.getElementById('settings-btn').addEventListener('click', toggleSettings);
 
 });
 $(function () {
@@ -29,14 +30,14 @@ $(function () {
 
 
 function writeToPopup(info) {
+    let link = uploadImage(info.img);
     $(".loading").hide();
     $(".content-wrap").show();
-    $(".entries").html(formatOutput(info.entries, "Loading..."))
-    let link = uploadImage(info.img);
-    // $(".entries").html(formatOutput(info.entries, link))
+    $(".entries").html(formatOutput(info.entries, link))
+    window.clockify_report = { entries: info.entries, link }
 };
 
-function formatOutput(entries) {
+function formatOutput(entries, link) {
     let output = "";
 
     let groups = entries.reduce(function (r, a) {
@@ -56,7 +57,7 @@ function formatOutput(entries) {
         output += `</ul>`;
         output += '<br>';
     })
-    output += `Clockify report: <span class="screenshot"> Loading... </screenshot>`;
+    output += `Clockify report: <span class="screenshot"> <a href="${link}" target="_blank">${link}</a> </screenshot>`;
 
     return output;
 }
@@ -78,13 +79,12 @@ function uploadImage(img) {
         success: function (response) {
             if (response.success) {
                 link = response.data.link;
-                $(".screenshot").html(`<a href="${link}" target="_blank">${link}</a>`)
             }
         },
         cache: false,
         contentType: false,
         processData: false,
-        async: true,
+        async: false,
     });
 
     return link;
@@ -105,11 +105,13 @@ function saveOptions() {
         { webhook_url },
         () => {
             // Update status to let user know options were saved.
-            const status = document.getElementById('status');
-            status.textContent = 'Options saved.';
+            const saveBtn = document.getElementById('settings-save');
+            saveBtn.textContent = 'Saved';
+            saveBtn.setAttribute("disabled", "");
             setTimeout(() => {
-                status.textContent = '';
-            }, 750);
+                saveBtn.textContent = 'Save';
+                saveBtn.removeAttribute("disabled");
+            }, 1000);
         }
     );
 };
@@ -132,19 +134,53 @@ function handleSendButton() {
 }
 
 function sendToWebhook() {
-    let url = document.getElementById('webhook_url').value;
+    chrome.storage.sync.get(
+        { webhook_url: '' },
+        ({ webhook_url }) => {
+            if (!webhook_url) return;
+            $.ajax({
+                url: webhook_url,
+                type: "POST",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    text: formatOutputForWebhook()
+                }),
+                success: function () {
+                    window.close()
+                },
+            });
+        }
+    );
 
-    if (!url) return;
+}
 
-    $.ajax({
-        url,
-        type: "POST",
-        contentType: 'application/json',
-        data: JSON.stringify({
-            text: "*Hello*"
-        }),
-        success: function (response) {
-            window.close()
-        },
-    });
+function formatOutputForWebhook() {
+    let { entries, link } = window.clockify_report;
+    let output = "Today's updates: \n\n"
+
+    let groups = entries.reduce(function (r, a) {
+        r[a.client] = r[a.client] || [];
+        r[a.client].push(a);
+        return r;
+    }, Object.create(null));
+
+    Object.keys(groups).forEach((client) => {
+        output += client + ":\n"
+
+        groups[client].forEach(entry => {
+            output += `• ${entry.title} \n`
+        })
+
+        output += "\n"
+    })
+
+    output += link;
+    // output += `\n\n`;
+
+    return output;
+}
+
+function toggleSettings() {
+    $(".settings").toggleClass("d-none")
+    $(".content-wrap").toggleClass("d-none")
 }
